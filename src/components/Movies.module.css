@@ -1,0 +1,9 @@
+.Peliculas {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: auto;
+  padding: 20px;
+  width: 90%;
+}

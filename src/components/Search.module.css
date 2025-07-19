@@ -1,0 +1,16 @@
+.Cuadro_busqueda {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin: 50px;
+}
+
+.Cuadro_busqueda > input {
+  width: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1.2rem;
+}
