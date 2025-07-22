@@ -5,6 +5,7 @@ import App from "./pages/App.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Movie } from "./pages/Movie.tsx";
 
+// TODO: Añadir un Context para los favoritos.
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>

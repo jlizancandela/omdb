@@ -15,12 +15,11 @@ export function Movies({ movies, lastMovieRef }: Props) {
   return (
     <section className={styles.Peliculas}>
       {movies.map((movie, index) => (
-        <div
+        <MovieCard
+          movie={movie}
           key={movie.imdbID}
           ref={movies.length === index + 1 ? lastMovieRef : undefined}
-        >
-          <MovieCard movie={movie} />
-        </div>
+        />
       ))}
     </section>
   );

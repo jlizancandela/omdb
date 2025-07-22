@@ -5,10 +5,11 @@ export const Movie = () => {
   const { id } = useParams<{ id: string }>();
   const { data } = useMovieDetails(id || "");
 
+  // TODO: Añadir detalles de la pelicula.
   return (
     <div>
       <h1>Movie</h1>
-      {data && <p>{data.Title}</p>}
+      <p>{data?.Title}</p>
     </div>
   );
 };

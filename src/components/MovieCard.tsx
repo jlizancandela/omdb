@@ -5,13 +5,15 @@ import { useNavigate } from "react-router";
 const FALLBACK_POSTER_URL = "https://placehold.co/300x444?text=Movie\nPoster";
 interface Props {
   movie: Movie;
+  key: string;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-export function MovieCard({ movie }: Props) {
+export function MovieCard({ movie, ref }: Props) {
   const navigate = useNavigate();
 
   return (
-    <article className={styles.Pelicula}>
+    <article className={styles.Pelicula} ref={ref}>
       <img
         src={movie.Poster === "N/A" ? FALLBACK_POSTER_URL : movie.Poster}
         alt={movie.Title}
