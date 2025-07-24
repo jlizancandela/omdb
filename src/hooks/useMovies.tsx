@@ -4,9 +4,9 @@ import { useDebouncedValue } from "./useDebouncedValue";
 import { useIntersectionObserver } from "./useIntersectionObserver";
 import { filtrarPeliculasUnicas, getMovies, hasMore } from "../services/omdb";
 
-export const useMovies = () => {
+export const useMovies = (movie = "") => {
   const [data, setData] = useState<OmdbSearchResult | null>(null);
-  const [pelicula, setPelicula] = useState("");
+  const [pelicula, setPelicula] = useState(movie);
   const [cache, setCache] = useState<Record<string, OmdbSearchResult>>({});
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,12 @@ export const useMovies = () => {
   const debounceSearch = useDebouncedValue(search, 500);
 
   useEffect(() => {
+    if (debounceSearch === "") return;
     setPelicula(debounceSearch);
+    const newPath = `/search/${debounceSearch}`;
+    if (window.location.pathname !== newPath) {
+      window.history.replaceState(null, "", newPath);
+    }
   }, [debounceSearch]);
 
   const lastid = useIntersectionObserver(() => {

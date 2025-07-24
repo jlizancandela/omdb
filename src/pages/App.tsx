@@ -1,9 +1,11 @@
+import { useParams } from "react-router";
 import { Movies } from "../components/Movies";
 import { Search } from "../components/Search";
 import { useMovies } from "../hooks/useMovies";
 
 function App() {
-  const { setSearch, data, lastid } = useMovies();
+  const { movie } = useParams<{ movie: string }>();
+  const { setSearch, data, lastid } = useMovies(movie ? movie : "");
 
   return (
     <>
