@@ -1,4 +1,8 @@
-import type { OmdbMovieShort, OmdbSearchResult } from "../models/omdb";
+import type {
+  OmdbMovieDetails,
+  OmdbMovieShort,
+  OmdbSearchResult,
+} from "../models/omdb";
 
 export const api = "https://www.omdbapi.com/";
 
@@ -46,4 +50,14 @@ export const getMovieById = (id: string) => {
       console.error("Error al obtener datos de OMDb:", error);
       return undefined;
     });
+};
+
+export const toShortMovie = (movie: OmdbMovieDetails) => {
+  return {
+    imdbID: movie.imdbID,
+    Title: movie.Title,
+    Year: movie.Year,
+    Poster: movie.Poster,
+    Type: movie.Type,
+  };
 };

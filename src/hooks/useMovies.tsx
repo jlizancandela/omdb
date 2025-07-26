@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { type OmdbSearchResult } from "../models/omdb";
 import { useDebouncedValue } from "./useDebouncedValue";
 import { useIntersectionObserver } from "./useIntersectionObserver";
 import { filtrarPeliculasUnicas, getMovies, hasMore } from "../services/omdb";
+import { Context } from "../context/Provider";
 
 export const useMovies = (movie = "") => {
   const [data, setData] = useState<OmdbSearchResult | null>(null);
@@ -13,9 +14,17 @@ export const useMovies = (movie = "") => {
   const [search, setSearch] = useState("");
   const debounceSearch = useDebouncedValue(search, 500);
 
+  const ctx = useContext(Context);
+  if (!ctx) {
+    throw new Error("context must be used within a Context.Provider");
+  }
+  const { setLastpage } = ctx;
+
   useEffect(() => {
     if (debounceSearch === "") return;
     setPelicula(debounceSearch);
+    setLastpage(debounceSearch);
+
     const newPath = `/search/${debounceSearch}`;
     if (window.location.pathname !== newPath) {
       window.history.replaceState(null, "", newPath);
