@@ -9,9 +9,9 @@ function App() {
 
   return (
     <>
-      <p>Proyecto OMDB</p>
+      <h1>Proyecto OMDB</h1>
       <Search setSearch={setSearch} />
-      <Movies movies={data?.Search ?? []} lastMovieRef={lastid} />
+      {data && <Movies movies={data.Search ?? []} lastMovieRef={lastid} />}
     </>
   );
 }

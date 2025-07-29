@@ -18,7 +18,13 @@ export function MovieCard({ movie, ref }: Props) {
   };
 
   return (
-    <article className={styles.Pelicula} ref={ref}>
+    <article
+      className={`${styles.Pelicula}`}
+      ref={ref}
+      data-aos="fade-up"
+      data-aos-duration="1000"
+      data-aos-easing="ease-in-out"
+    >
       <img
         src={movie.Poster === "N/A" ? FALLBACK_POSTER_URL : movie.Poster}
         alt={movie.Title}

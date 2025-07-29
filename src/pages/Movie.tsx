@@ -17,6 +17,15 @@ export const Movie = () => {
 
   const navigate = useNavigate();
 
+  const handledGoBack = () => {
+    if (lastPage === "") {
+      navigate("/favorites");
+      return;
+    }
+
+    navigate(`/search/${lastPage}`);
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -28,7 +37,7 @@ export const Movie = () => {
   if (data)
     return (
       <div className={styles.movieContainer}>
-        <button onClick={() => navigate(`/search/${lastPage}`)}>Go back</button>
+        <button onClick={handledGoBack}>Go back</button>
         <img src={data?.Poster} alt={data?.Title} />
         <div className={styles.movieDetails}>
           <h1>{data?.Title}</h1>

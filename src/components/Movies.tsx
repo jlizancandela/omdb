@@ -4,7 +4,7 @@ import styles from "./Movies.module.css";
 
 interface Props {
   movies: Movie[];
-  lastMovieRef: (node: HTMLDivElement | null) => void;
+  lastMovieRef?: (node: HTMLDivElement | null) => void;
 }
 
 export function Movies({ movies, lastMovieRef }: Props) {
@@ -18,7 +18,11 @@ export function Movies({ movies, lastMovieRef }: Props) {
         <MovieCard
           movie={movie}
           key={movie.imdbID}
-          ref={movies.length === index + 1 ? lastMovieRef : undefined}
+          ref={
+            lastMovieRef && movies.length === index + 1
+              ? lastMovieRef
+              : undefined
+          }
         />
       ))}
     </section>
