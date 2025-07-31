@@ -6,7 +6,6 @@ import { useFavorites } from "../hooks/useFavorites";
 const FALLBACK_POSTER_URL = "https://placehold.co/300x444?text=Movie\nPoster";
 interface Props {
   movie: Movie;
-  key: string;
   ref?: React.Ref<HTMLDivElement>;
 }
 
