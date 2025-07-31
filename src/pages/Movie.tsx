@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useMovieDetails } from "../hooks/useMovieDetails";
 import styles from "./Movie.module.css";
 import { useContext } from "react";
@@ -13,19 +13,6 @@ export const Movie = () => {
     throw new Error("context must be used within a Context.Provider");
   }
 
-  const { lastPage } = ctx;
-
-  const navigate = useNavigate();
-
-  const handledGoBack = () => {
-    if (lastPage === "") {
-      navigate("/favorites");
-      return;
-    }
-
-    navigate(`/search/${lastPage}`);
-  };
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -37,7 +24,6 @@ export const Movie = () => {
   if (data)
     return (
       <div className={styles.movieContainer}>
-        <button onClick={handledGoBack}>Go back</button>
         <img src={data?.Poster} alt={data?.Title} />
         <div className={styles.movieDetails}>
           <h1>{data?.Title}</h1>

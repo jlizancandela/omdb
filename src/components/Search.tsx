@@ -12,8 +12,8 @@ export function Search({ setSearch }: Props) {
     >
       <input
         type="text"
-        placeholder="Película"
         onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search..."
       />
     </form>
   );

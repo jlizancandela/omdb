@@ -1,20 +1,17 @@
 .movieContainer {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
   padding: 2rem;
   color: black;
+  width: 70%;
 }
 
 .movieContainer img {
-  max-width: 400px;
-  height: auto;
   border-radius: 10px;
-}
-
-.movieDetails {
-  max-width: 600px;
+  width: 500px;
+  height: 600px;
+  object-fit: cover;
 }
 
 .movieDetails h1 {
