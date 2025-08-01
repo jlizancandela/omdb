@@ -4,7 +4,7 @@ import type { OmdbMovieShort } from "../models/omdb";
 import { act, renderHook } from "@testing-library/react";
 import { useFavorites } from "./useFavorites";
 
-test("useFavorites", () => {
+describe("useFavorites", () => {
   let fav: OmdbMovieShort[] = [];
   const setFav = vi.fn((newFav) => (fav = newFav));
   const lastPage = "";
@@ -24,30 +24,41 @@ test("useFavorites", () => {
     </Context.Provider>
   );
 
-  const { result, rerender } = renderHook(() => useFavorites(), {
-    wrapper,
+  test("should return initial values", () => {
+    const { result } = renderHook(() => useFavorites(), {
+      wrapper,
+    });
+    expect(result.current.fav).toEqual([]);
+    expect(result.current.toggleFav).toBeDefined();
+    expect(result.current.isFav).toBeDefined();
+
+    expect(result.current.isFav(movie.imdbID)).toBe(false);
   });
 
-  expect(result.current.fav).toEqual([]);
-  expect(result.current.toggleFav).toBeDefined();
-  expect(result.current.isFav).toBeDefined();
+  test("should add movie to favorites", () => {
+    const { result, rerender } = renderHook(() => useFavorites(), {
+      wrapper,
+    });
+    act(() => {
+      result.current.toggleFav(movie);
+    });
 
-  expect(result.current.isFav(movie.imdbID)).toBe(false);
+    expect(setFav).toHaveBeenCalledWith([movie]);
 
-  act(() => {
-    result.current.toggleFav(movie);
+    fav = [movie];
+    rerender();
+
+    expect(result.current.isFav(movie.imdbID)).toBe(true);
   });
 
-  expect(setFav).toHaveBeenCalledWith([movie]);
+  test("should remove movie from favorites", () => {
+    const { result } = renderHook(() => useFavorites(), {
+      wrapper,
+    });
+    act(() => {
+      result.current.toggleFav(movie);
+    });
 
-  fav = [movie];
-  rerender();
-
-  expect(result.current.isFav(movie.imdbID)).toBe(true);
-
-  act(() => {
-    result.current.toggleFav(movie);
+    expect(setFav).toHaveBeenCalledWith([]);
   });
-
-  expect(setFav).toHaveBeenCalledWith([]);
 });
