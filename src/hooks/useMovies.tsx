@@ -21,7 +21,7 @@ export const useMovies = (movie = "") => {
   const { setLastpage } = ctx;
 
   useEffect(() => {
-    if (debounceSearch === "") return;
+    if (debounceSearch === "" || search === "") return;
     setPelicula(debounceSearch);
     setLastpage(debounceSearch);
 
