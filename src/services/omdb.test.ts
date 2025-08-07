@@ -22,7 +22,7 @@ afterAll(() => {
 
 describe("OMDB API", () => {
   test("should return movies", async () => {
-    const response = getMovies("mock", 1, {});
+    const response = getMovies("mock", 1);
 
     const data = await response;
     if (!data) return;
@@ -69,7 +69,7 @@ describe("OMDB API", () => {
   });
 
   test("has more should return true", async () => {
-    const response = getMovies("mock", 1, {});
+    const response = getMovies("mock", 1);
 
     const data = await response;
     if (!data) return;

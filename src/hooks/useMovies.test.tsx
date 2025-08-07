@@ -6,6 +6,7 @@ import * as debounce from "./useDebouncedValue";
 import * as intersection from "./useIntersectionObserver";
 import * as omdb from "../services/omdb";
 import type { OmdbSearchResult } from "../models/omdb";
+import type { ReactNode } from "react";
 
 vi.mock("./useDebouncedValue");
 vi.mock("./useIntersectionObserver");
@@ -21,7 +22,7 @@ describe("useMovies", () => {
   const filtrarPeliculasUnicas = vi.mocked(omdb.filtrarPeliculasUnicas);
 
   const setLastpage = vi.fn();
-  const wrapper = ({ children }: any) => (
+  const wrapper = ({ children }: { children: ReactNode }) => (
     <Context.Provider
       value={{ fav: [], setFav: vi.fn(), lastPage: "", setLastpage }}
     >
@@ -74,7 +75,7 @@ describe("useMovies", () => {
       expect(result.current.data).toEqual(movieData);
     });
 
-    expect(getMovies).toHaveBeenCalledWith("Batman", 1, {});
+    expect(getMovies).toHaveBeenCalledWith("Batman", 1);
     expect(setLastpage).toHaveBeenCalledWith("Batman");
   });
 
