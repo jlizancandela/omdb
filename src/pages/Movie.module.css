@@ -38,6 +38,10 @@
   transform: scale(1.1);
 }
 
+.favoriteButton:focus {
+  outline: none;
+}
+
 .fav {
   color: #ef4444;
 }
