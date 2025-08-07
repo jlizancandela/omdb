@@ -42,10 +42,17 @@ export const filtrarPeliculasUnicas = (
   return nuevas.filter((p) => !ids.has(p.imdbID));
 };
 
-export const getMovieById = (id: string) => {
+export const getMovieById = (
+  id: string
+): Promise<OmdbMovieDetails | undefined> => {
   return fetch(`${api}?i=${id}&apikey=${import.meta.env.VITE_API_KEY}`)
-    .then((response) => response.json())
-    .then((data) => data)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data: OmdbMovieDetails) => data)
     .catch((error) => {
       console.error("Error al obtener datos de OMDb:", error);
       return undefined;
