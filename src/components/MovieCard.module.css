@@ -61,7 +61,8 @@
 }
 
 .favoriteButton:focus {
-  outline: none;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .fav {
