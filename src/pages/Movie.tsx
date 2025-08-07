@@ -43,8 +43,18 @@ export const Movie = () => {
           <p>Genre: {data?.Genre}</p>
           <p>Runtime: {data?.Runtime}</p>
           <p>IMDB Rating: {data?.imdbRating}</p>
-          <button onClick={() => toggleFav(toShortMovie(data))}>
-            {isFav(id || "") ? "dislike" : "like"}
+          <button
+            className={`${styles.favoriteButton} ${
+              isFav(id || "") ? styles.fav : styles.notFav
+            }`}
+            onClick={() => toggleFav(toShortMovie(data))}
+            aria-label={
+              isFav(id || "")
+                ? "Remove from favorites"
+                : "Add to favorites"
+            }
+          >
+            {isFav(id || "") ? "♥" : "♡"}
           </button>
         </div>
       </div>

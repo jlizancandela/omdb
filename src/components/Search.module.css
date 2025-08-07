@@ -1,16 +1,32 @@
 .Cuadro_busqueda {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  margin: 50px;
+  margin: 50px auto;
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.Cuadro_busqueda::before {
+  content: "\1F50D";
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 1.2rem;
 }
 
 .Cuadro_busqueda > input {
-  width: 500px;
-  padding: 10px;
-  border-radius: 5px;
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border-radius: 9999px;
   border: 1px solid #ccc;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.Cuadro_busqueda > input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-color);
+  border-color: var(--primary-color);
 }

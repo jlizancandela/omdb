@@ -9,6 +9,8 @@ export function Search({ setSearch }: Props) {
     <form
       className={styles.Cuadro_busqueda}
       onSubmit={(e) => e.preventDefault()}
+      data-aos="fade-up"
+      data-aos-duration="600"
     >
       <input
         type="text"
