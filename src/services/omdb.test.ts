@@ -113,7 +113,6 @@ describe("OMDB API", () => {
     ];
 
     const result = filtrarPeliculasUnicas(existingMovies, incomingMovies);
-    console.log(result);
     expect(result.length).toBe(1);
     expect(result[0].Title).toBe("Mock Movie 3");
   });
