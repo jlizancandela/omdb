@@ -33,11 +33,6 @@ export const useMovies = (movie = "") => {
     if (debounceSearch === "" || search === "") return;
     setPelicula(debounceSearch);
     setLastpage(debounceSearch);
-
-    const newPath = `/search/${debounceSearch}`;
-    if (window.location.pathname !== newPath) {
-      window.history.replaceState(null, "", newPath);
-    }
   }, [debounceSearch]);
 
   const lastid = useIntersectionObserver(() => {
@@ -120,5 +115,12 @@ export const useMovies = (movie = "") => {
     setSearch(value);
   };
 
-  return { data, setSearch: handleSearch, loading, lastid, error };
+  return {
+    data,
+    setSearch: handleSearch,
+    loading,
+    lastid,
+    error,
+    search,
+  };
 };

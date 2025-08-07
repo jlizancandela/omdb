@@ -6,15 +6,11 @@ export const NavBar = () => {
   const ctx = useContext(Context);
   if (!ctx) return null;
 
-  const { lastPage } = ctx;
+  const { lastPage, setLastpage } = ctx;
   const location = useLocation();
 
   return (
-    <nav
-      className={styles.nav}
-      data-aos="fade-down"
-      data-aos-duration="600"
-    >
+    <nav className={styles.nav} data-aos="fade-down" data-aos-duration="600">
       <ul>
         {lastPage !== "" && location.pathname.includes("/movie/") && (
           <li>
@@ -22,7 +18,9 @@ export const NavBar = () => {
           </li>
         )}
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/" onClick={() => setLastpage("")}>
+            Home
+          </Link>
         </li>
         <li>
           <Link to="/favorites">Favorites</Link>
