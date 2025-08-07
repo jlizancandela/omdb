@@ -5,15 +5,43 @@
   padding: 2rem;
   color: black;
   width: 70%;
+  margin: 2rem auto;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .movieContainer img {
-  border-radius: 10px;
+  border-radius: 12px;
   width: 500px;
   height: 600px;
   object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .movieDetails h1 {
   margin-top: 0;
+}
+
+.favoriteButton {
+  font-size: 2rem;
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+  border: none;
+  background: transparent;
+  transition: transform 0.2s ease;
+  align-self: flex-start;
+}
+
+.favoriteButton:hover {
+  transform: scale(1.1);
+}
+
+.fav {
+  color: #ef4444;
+}
+
+.notFav {
+  color: #6b7280;
 }

@@ -10,7 +10,11 @@ export const NavBar = () => {
   const location = useLocation();
 
   return (
-    <nav className={styles.nav}>
+    <nav
+      className={styles.nav}
+      data-aos="fade-down"
+      data-aos-duration="600"
+    >
       <ul>
         {lastPage !== "" && location.pathname.includes("/movie/") && (
           <li>

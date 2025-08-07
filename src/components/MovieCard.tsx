@@ -37,8 +37,18 @@ export function MovieCard({ movie, ref }: Props) {
       <section>
         <h2>{movie.Title}</h2>
         <p>{movie.Year}</p>
-        <button onClick={() => toggleFav(movie)}>
-          {isFav(movie.imdbID) ? "Remove from favorites" : "Add to favorites"}
+        <button
+          className={`${styles.favoriteButton} ${
+            isFav(movie.imdbID) ? styles.fav : styles.notFav
+          }`}
+          onClick={() => toggleFav(movie)}
+          aria-label={
+            isFav(movie.imdbID)
+              ? "Remove from favorites"
+              : "Add to favorites"
+          }
+        >
+          {isFav(movie.imdbID) ? "♥" : "♡"}
         </button>
       </section>
     </article>

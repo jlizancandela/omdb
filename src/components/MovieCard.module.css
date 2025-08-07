@@ -1,18 +1,25 @@
 .Pelicula {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: whitesmoke;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  background-color: var(--card-bg);
   padding: 10px;
   gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.Pelicula:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .Pelicula > img {
-  border-radius: 5px;
+  border-radius: 8px;
   object-fit: cover;
   cursor: pointer;
   width: 200px;
@@ -37,8 +44,26 @@
   overflow: hidden;
 }
 
-.Pelicula > section > button {
-  font-size: medium;
+.favoriteButton {
+  font-size: 1.5rem;
   cursor: pointer;
-  width: 100%;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  transition: transform 0.2s ease;
+  align-self: flex-start;
+}
+
+.favoriteButton:hover {
+  transform: scale(1.1);
+}
+
+.fav {
+  color: #ef4444;
+}
+
+.notFav {
+  color: #6b7280;
 }
