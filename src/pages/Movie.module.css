@@ -32,6 +32,9 @@
   background: transparent;
   transition: transform 0.2s ease;
   align-self: flex-start;
+  padding: 0;
+  line-height: 3rem;
+  text-align: center;
 }
 
 .favoriteButton:hover {
@@ -39,7 +42,8 @@
 }
 
 .favoriteButton:focus {
-  outline: none;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .fav {

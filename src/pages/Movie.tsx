@@ -49,9 +49,7 @@ export const Movie = () => {
             }`}
             onClick={() => toggleFav(toShortMovie(data))}
             aria-label={
-              isFav(id || "")
-                ? "Remove from favorites"
-                : "Add to favorites"
+              isFav(id || "") ? "Remove from favorites" : "Add to favorites"
             }
           >
             {isFav(id || "") ? "♥" : "♡"}
