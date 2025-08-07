@@ -5,6 +5,7 @@ import { useMovies } from "./useMovies";
 import * as debounce from "./useDebouncedValue";
 import * as intersection from "./useIntersectionObserver";
 import * as omdb from "../services/omdb";
+import type { OmdbSearchResult } from "../models/omdb";
 
 vi.mock("./useDebouncedValue");
 vi.mock("./useIntersectionObserver");
@@ -48,7 +49,7 @@ describe("useMovies", () => {
   });
 
   test("should fetch movies when search is set", async () => {
-    const movieData = {
+    const movieData: OmdbSearchResult = {
       Search: [
         {
           Title: "Test Movie",
@@ -81,7 +82,7 @@ describe("useMovies", () => {
     hasMore.mockReturnValue(true);
     filtrarPeliculasUnicas.mockImplementation((_, nuevo) => nuevo);
 
-    const page1 = {
+    const page1: OmdbSearchResult = {
       Search: [
         {
           Title: "First",
@@ -95,7 +96,7 @@ describe("useMovies", () => {
       Response: "True",
     };
 
-    const page2 = {
+    const page2: OmdbSearchResult = {
       Search: [
         {
           Title: "Second",
@@ -134,4 +135,3 @@ describe("useMovies", () => {
     expect(result.current.data?.Search[1]).toEqual(page2.Search[0]);
   });
 });
-
