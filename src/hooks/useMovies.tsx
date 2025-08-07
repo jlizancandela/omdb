@@ -22,6 +22,14 @@ export const useMovies = (movie = "") => {
   const { setLastpage } = ctx;
 
   useEffect(() => {
+    setPelicula(movie);
+    if (movie === "") {
+      setSearch("");
+      setLastpage("");
+    }
+  }, [movie]);
+
+  useEffect(() => {
     if (debounceSearch === "" || search === "") return;
     setPelicula(debounceSearch);
     setLastpage(debounceSearch);
@@ -39,7 +47,6 @@ export const useMovies = (movie = "") => {
   });
 
   useEffect(() => {
-    if (!pelicula) return;
     setData(null); // Limpia resultados anteriores
     setPage(1); // Reinicia la paginación
   }, [pelicula]);
@@ -99,6 +106,13 @@ export const useMovies = (movie = "") => {
   }, [pelicula, page]);
 
   const handleSearch = (value: string) => {
+    if (value === "") {
+      setSearch("");
+      setPelicula("");
+      setLastpage("");
+      window.history.replaceState(null, "", "/");
+      return;
+    }
     if (value.length < 3) {
       return;
     }
