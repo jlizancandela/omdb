@@ -135,4 +135,74 @@ describe("useMovies", () => {
     expect(result.current.data?.Search[0]).toEqual(page1.Search[0]);
     expect(result.current.data?.Search[1]).toEqual(page2.Search[0]);
   });
+
+  test("should clear movies when search is cleared", async () => {
+    const movieData: OmdbSearchResult = {
+      Search: [
+        {
+          Title: "Test Movie",
+          Year: "2022",
+          imdbID: "tt1234567",
+          Type: "movie",
+          Poster: "https://example.com/poster.jpg",
+        },
+      ],
+      totalResults: "1",
+      Response: "True",
+    };
+    getMovies.mockResolvedValueOnce(movieData);
+
+    const { result } = renderHook(() => useMovies(), { wrapper });
+
+    act(() => {
+      result.current.setSearch("Batman");
+    });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(movieData);
+    });
+
+    act(() => {
+      result.current.setSearch("");
+    });
+
+    await waitFor(() => {
+      expect(result.current.data).toBeNull();
+    });
+    expect(setLastpage).toHaveBeenCalledWith("");
+    expect(window.location.pathname).toBe("/");
+  });
+
+  test("should reset movies when navigating to home", async () => {
+    const movieData: OmdbSearchResult = {
+      Search: [
+        {
+          Title: "Test Movie",
+          Year: "2022",
+          imdbID: "tt1234567",
+          Type: "movie",
+          Poster: "https://example.com/poster.jpg",
+        },
+      ],
+      totalResults: "1",
+      Response: "True",
+    };
+    getMovies.mockResolvedValueOnce(movieData);
+
+    const { result, rerender } = renderHook(
+      ({ movie }: { movie: string }) => useMovies(movie),
+      { initialProps: { movie: "Batman" }, wrapper }
+    );
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(movieData);
+    });
+
+    rerender({ movie: "" });
+
+    await waitFor(() => {
+      expect(result.current.data).toBeNull();
+    });
+    expect(setLastpage).toHaveBeenCalledWith("");
+  });
 });
