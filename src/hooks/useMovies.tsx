@@ -13,6 +13,7 @@ export const useMovies = (movie = "") => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const debounceSearch = useDebouncedValue(search, 500);
+  const [error, setError] = useState<string | null>(null);
 
   const ctx = useContext(Context);
   if (!ctx) {
@@ -73,12 +74,20 @@ export const useMovies = (movie = "") => {
         }
       })
       .catch((error) => {
-        console.error("Error en useEffect:", error);
+        setError(error.message);
       })
       .finally(() => {
         setLoading(false);
       });
   }, [pelicula, page]);
 
-  return { data, setSearch, lastid };
+  const handleSearch = (value: string) => {
+    if (value.length < 3) {
+      return;
+    }
+
+    setSearch(value);
+  };
+
+  return { data, setSearch: handleSearch, loading, lastid, error };
 };

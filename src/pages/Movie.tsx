@@ -4,6 +4,7 @@ import styles from "./Movie.module.css";
 import { useContext } from "react";
 import { Context } from "../context/Provider";
 import { toShortMovie } from "../services/omdb";
+import image from "../assets/placeHolder.png";
 
 export const Movie = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,10 +22,18 @@ export const Movie = () => {
     return <p>Something went wrong...</p>;
   }
 
+  console.log(data);
+
   if (data)
     return (
       <div className={styles.movieContainer}>
-        <img src={data?.Poster} alt={data?.Title} />
+        <img
+          src={data?.Poster == "N/A" ? image : data?.Poster}
+          alt={data?.Title}
+          onError={(e) => {
+            e.currentTarget.src = image;
+          }}
+        />
         <div className={styles.movieDetails}>
           <h1>{data?.Title}</h1>
           <p>{data?.Plot}</p>

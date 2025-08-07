@@ -2,8 +2,8 @@ import { type OmdbMovieShort as Movie } from "../models/omdb";
 import styles from "./MovieCard.module.css";
 import { useNavigate } from "react-router";
 import { useFavorites } from "../hooks/useFavorites";
+import image from "../assets/placeHolder.png";
 
-const FALLBACK_POSTER_URL = "https://placehold.co/300x444?text=Movie\nPoster";
 interface Props {
   movie: Movie;
   ref?: React.Ref<HTMLDivElement>;
@@ -25,10 +25,10 @@ export function MovieCard({ movie, ref }: Props) {
       data-aos-easing="ease-in-out"
     >
       <img
-        src={movie.Poster === "N/A" ? FALLBACK_POSTER_URL : movie.Poster}
+        src={movie.Poster === "N/A" ? image : movie.Poster}
         alt={movie.Title}
         onError={(e) => {
-          e.currentTarget.src = FALLBACK_POSTER_URL;
+          e.currentTarget.src = image;
         }}
         onClick={() => {
           handleMovieClick(movie.imdbID);
