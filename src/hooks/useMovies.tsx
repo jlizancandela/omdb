@@ -46,17 +46,34 @@ export const useMovies = (movie = "") => {
 
   useEffect(() => {
     if (!pelicula) return;
+    const clave = `${pelicula}-${page}`;
+
+    if (cache[clave]) {
+      const dataCache = cache[clave];
+      setData((prev) => {
+        if (!prev || page === 1) return dataCache;
+
+        return {
+          ...dataCache,
+          Search: [
+            ...prev.Search,
+            ...(dataCache.Search
+              ? filtrarPeliculasUnicas(prev.Search, dataCache.Search)
+              : []),
+          ],
+        };
+      });
+      return;
+    }
+
     setLoading(true);
-    getMovies(pelicula, page, cache)
+    getMovies(pelicula, page)
       .then((data) => {
         if (data) {
-          const clave = `${pelicula}-${page}`;
-          if (!cache[clave]) {
-            setCache((prev) => ({
-              ...prev,
-              [clave]: data,
-            }));
-          }
+          setCache((prev) => ({
+            ...prev,
+            [clave]: data,
+          }));
 
           setData((prev) => {
             if (!prev || page === 1) return data;

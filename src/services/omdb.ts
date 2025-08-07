@@ -8,15 +8,8 @@ export const api = "https://www.omdbapi.com/";
 
 export const getMovies = (
   pelicula: string,
-  page: number,
-  cache: Record<string, OmdbSearchResult>
+  page: number
 ): Promise<OmdbSearchResult | undefined> => {
-  const claveCache = `${pelicula}-${page}`;
-
-  if (cache[claveCache]) {
-    return Promise.resolve(cache[claveCache]);
-  }
-
   return fetch(
     `${api}?s=${pelicula}&page=${page}&apikey=${import.meta.env.VITE_API_KEY}`
   )
