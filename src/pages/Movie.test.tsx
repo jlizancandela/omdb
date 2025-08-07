@@ -35,7 +35,7 @@ describe("Movie", () => {
   );
 
   beforeAll(() => {
-    vi.clearAllMocks;
+    vi.clearAllMocks();
   });
 
   test("should render Movie component", () => {
