@@ -29,6 +29,7 @@ export const handlers = [
         ],
       });
     }
+
     if (id) {
       return HttpResponse.json({
         Title: "Mock Movie by ID",
@@ -38,10 +39,11 @@ export const handlers = [
         Poster: "N/A",
         Response: "True",
       });
-      return HttpResponse.json(
-        { Response: "False", Error: "Missing query" },
-        { status: 400 }
-      );
     }
+
+    return HttpResponse.json(
+      { Response: "False", Error: "Missing query" },
+      { status: 400 }
+    );
   }),
 ];
