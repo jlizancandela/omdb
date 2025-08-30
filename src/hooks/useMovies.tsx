@@ -53,7 +53,13 @@ export const useMovies = (movie = "") => {
     if (cache[clave]) {
       const dataCache = cache[clave];
       setData((prev) => {
-        if (!prev || page === 1) return dataCache;
+        if (!prev || page === 1)
+          return {
+            ...dataCache,
+            Search: dataCache.Search
+              ? filtrarPeliculasUnicas([], dataCache.Search)
+              : [],
+          };
 
         return {
           ...dataCache,
@@ -78,7 +84,13 @@ export const useMovies = (movie = "") => {
           }));
 
           setData((prev) => {
-            if (!prev || page === 1) return data;
+            if (!prev || page === 1)
+              return {
+                ...data,
+                Search: data.Search
+                  ? filtrarPeliculasUnicas([], data.Search)
+                  : [],
+              };
 
             return {
               ...data,

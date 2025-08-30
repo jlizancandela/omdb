@@ -11,7 +11,7 @@ export const getMovies = (
   page: number
 ): Promise<OmdbSearchResult | undefined> => {
   return fetch(
-    `${api}?s=${pelicula}&page=${page}&apikey=${import.meta.env.VITE_API_KEY}`
+    `${api}?s=${pelicula}&type=movie&page=${page}&apikey=${import.meta.env.VITE_API_KEY}`
   )
     .then((response) => response.json())
     .then((data: OmdbSearchResult) => data)
@@ -31,8 +31,27 @@ export const filtrarPeliculasUnicas = (
   anteriores: OmdbMovieShort[],
   nuevas: OmdbMovieShort[]
 ): OmdbMovieShort[] => {
+  // Considera duplicado si coincide el imdbID o si coinciden
+  // Título normalizado + Poster (carátula)
+  const normalizar = (s: string) => s.toLowerCase().trim().replace(/\s+/g, " ");
+
   const ids = new Set(anteriores.map((p) => p.imdbID));
-  return nuevas.filter((p) => !ids.has(p.imdbID));
+  const claves = new Set(
+    anteriores.map(
+      (p) => `${normalizar(p.Title)}|${p.Poster ?? "N/A"}`
+    )
+  );
+
+  const resultado: OmdbMovieShort[] = [];
+  for (const p of nuevas) {
+    const clave = `${normalizar(p.Title)}|${p.Poster ?? "N/A"}`;
+    if (ids.has(p.imdbID) || claves.has(clave)) continue;
+    // Añade y actualiza los sets para evitar duplicados dentro del propio lote
+    resultado.push(p);
+    ids.add(p.imdbID);
+    claves.add(clave);
+  }
+  return resultado;
 };
 
 export const getMovieById = (

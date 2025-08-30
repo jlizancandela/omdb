@@ -116,4 +116,38 @@ describe("OMDB API", () => {
     expect(result.length).toBe(1);
     expect(result[0].Title).toBe("Mock Movie 3");
   });
+
+  test("filter duplicates by title + poster even with different ids", () => {
+    const existingMovies: OmdbMovieShort[] = [
+      {
+        Title: "Same Title",
+        Year: "2020",
+        imdbID: "tt0000001",
+        Type: "movie",
+        Poster: "https://image.example/same.jpg",
+      },
+    ];
+
+    const incomingMovies: OmdbMovieShort[] = [
+      {
+        Title: "Same Title",
+        Year: "2020",
+        imdbID: "tt0000002", // distinto ID pero misma portada y título
+        Type: "movie",
+        Poster: "https://image.example/same.jpg",
+      },
+      {
+        Title: "Different Title",
+        Year: "2021",
+        imdbID: "tt0000003",
+        Type: "movie",
+        Poster: "https://image.example/other.jpg",
+      },
+    ];
+
+    const result = filtrarPeliculasUnicas(existingMovies, incomingMovies);
+    // Debe filtrar el primero por título+poster y dejar solo el diferente
+    expect(result.length).toBe(1);
+    expect(result[0].imdbID).toBe("tt0000003");
+  });
 });
