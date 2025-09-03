@@ -29,4 +29,6 @@ jobs:
           context: .
           file: ./dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/omdb:latest
+          tags: 
+            ${{ vars.DOCKERHUB_USERNAME }}/omdb:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/omdb:${{ github.sha }}
