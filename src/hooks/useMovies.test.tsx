@@ -33,12 +33,13 @@ describe("useMovies", () => {
   let intersectionCallback: () => void = () => {};
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
     useDebouncedValue.mockImplementation((value) => value);
     useIntersectionObserver.mockImplementation((cb) => {
       intersectionCallback = cb;
       return vi.fn();
     });
+    filtrarPeliculasUnicas.mockImplementation((_, nuevo) => nuevo);
   });
 
   test("should return initial values", () => {
@@ -81,7 +82,6 @@ describe("useMovies", () => {
 
   test("should append movies when loading next page", async () => {
     hasMore.mockReturnValue(true);
-    filtrarPeliculasUnicas.mockImplementation((_, nuevo) => nuevo);
 
     const page1: OmdbSearchResult = {
       Search: [
