@@ -30,7 +30,7 @@ export const useMovies = (movie = "") => {
   }, [movie]);
 
   useEffect(() => {
-    if (debounceSearch === "" || search === "") return;
+    if (debounceSearch === "") return;
     setPelicula(debounceSearch);
     setLastpage(debounceSearch);
   }, [debounceSearch]);
