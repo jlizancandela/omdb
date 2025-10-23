@@ -11,7 +11,7 @@ export const getMovies = (
   page: number
 ): Promise<OmdbSearchResult | undefined> => {
   return fetch(
-    `${api}?s=${pelicula}&type=movie&page=${page}&apikey=${import.meta.env.VITE_API_KEY}`
+    `${api}?s=${pelicula}&type=movie&page=${page}&apikey=${window.API_KEY}`
   )
     .then((response) => response.json())
     .then((data: OmdbSearchResult) => data)
@@ -57,7 +57,7 @@ export const filtrarPeliculasUnicas = (
 export const getMovieById = (
   id: string
 ): Promise<OmdbMovieDetails | undefined> => {
-  return fetch(`${api}?i=${id}&apikey=${import.meta.env.VITE_API_KEY}`)
+  return fetch(`${api}?i=${id}&apikey=${window.API_KEY}`)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

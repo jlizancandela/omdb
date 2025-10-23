@@ -28,4 +28,16 @@ COPY --from=builder /app/dist /usr/share/caddy
 # y lo copias así:
 COPY Caddyfile /etc/caddy/Caddyfile
 
+# Copiamos el entrypoint script
+COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Hacemos el entrypoint script ejecutable
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Exponemos la variable de entorno
+ENV APIKEY=""
+
+# Establecemos el entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
 # Por defecto, Caddy servirá /usr/share/caddy en el puerto 80
