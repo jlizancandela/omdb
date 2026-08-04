@@ -1,0 +1,20 @@
+.page { width: 100%; }
+.header { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; }
+.header h1 { font-size: 2rem; line-height: 1.15; letter-spacing: -0.03em; }
+.header p { max-width: 56ch; margin-top: 0.6rem; color: var(--muted-color); }
+.mode { flex: 0 0 auto; padding: 0.45rem 0.75rem; border: 1px solid #dbe3ef; border-radius: 9999px; background: #eff6ff; color: #345173; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.results { margin-top: 2.5rem; }
+.message { padding: 2rem; border: 1px solid var(--border-color); border-radius: 12px; background: var(--card-bg); color: var(--muted-color); text-align: center; }
+.loadingBar { width: 180px; height: 1.25rem; margin-bottom: 1.25rem; border-radius: 6px; background: #e5e7eb; animation: pulse 1.2s ease-in-out infinite; }
+.loadingGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.loadingGrid span { height: 230px; border-radius: 12px; background: #e5e7eb; animation: pulse 1.2s ease-in-out infinite; }
+.loadingMore { display: flex; align-items: center; justify-content: center; gap: 0.55rem; min-height: 2.5rem; margin-top: 1rem; color: var(--muted-color); font-size: 0.875rem; font-weight: 600; }
+.loadingMoreIndicator { width: 0.9rem; height: 0.9rem; border: 2px solid #cbd5e1; border-top-color: #345173; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes pulse { 50% { opacity: 0.55; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 640px) {
+  .header { align-items: flex-start; flex-direction: column; gap: 1rem; }
+  .header h1 { font-size: 1.75rem; }
+  .loadingGrid { grid-template-columns: 1fr; }
+  .loadingGrid span { height: 140px; }
+}

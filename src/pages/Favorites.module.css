@@ -1,0 +1,4 @@
+.page { width: 100%; }
+.page header { margin-bottom: 2.5rem; }
+.page h1 { font-size: 2rem; line-height: 1.15; letter-spacing: -0.03em; }
+.page header p { margin-top: 0.6rem; color: var(--muted-color); }

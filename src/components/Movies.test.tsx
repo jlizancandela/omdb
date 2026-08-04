@@ -42,4 +42,14 @@ describe("Movies", () => {
     expect(result.getByText("Test Movie")).toBeInTheDocument();
     expect(result.getByText("Test Movie 2")).toBeInTheDocument();
   });
+
+  test("should render a stable sentinel after the movie list", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <Movies movies={mockupMovies} />
+      </MemoryRouter>
+    );
+
+    expect(container.querySelector('[aria-hidden="true"]')).toBeInTheDocument();
+  });
 });

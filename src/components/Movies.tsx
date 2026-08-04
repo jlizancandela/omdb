@@ -4,27 +4,28 @@ import styles from "./Movies.module.css";
 
 interface Props {
   movies: Movie[];
-  lastMovieRef?: (node: HTMLDivElement | null) => void;
+  sentinelRef?: (node: HTMLElement | null) => void;
+  emptyMessage?: string;
 }
 
-export function Movies({ movies, lastMovieRef }: Props) {
+export function Movies({
+  movies,
+  sentinelRef,
+  emptyMessage = "No movies found for that search.",
+}: Props) {
   if (movies.length === 0) {
-    return <p>No se encontraron películas</p>;
+    return <p className={styles.empty} role="status">{emptyMessage}</p>;
   }
 
   return (
-    <section className={styles.Peliculas}>
-      {movies.map((movie, index) => (
+    <section className={styles.movies} aria-label="Movie results">
+      {movies.map((movie) => (
         <MovieCard
           movie={movie}
           key={movie.imdbID}
-          ref={
-            lastMovieRef && movies.length === index + 1
-              ? lastMovieRef
-              : undefined
-          }
         />
       ))}
+      <div ref={sentinelRef} className={styles.sentinel} aria-hidden="true" />
     </section>
   );
 }

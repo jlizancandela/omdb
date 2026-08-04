@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
 
+const emptyOptions: IntersectionObserverInit = {};
+
 export function useIntersectionObserver(
-  callback: () => void,
-  options: IntersectionObserverInit = {}
+  callback: (entry: IntersectionObserverEntry) => void,
+  options: IntersectionObserverInit = emptyOptions
 ) {
   const observer = useRef<IntersectionObserver | null>(null);
   const savedCallback = useRef(callback);
@@ -19,8 +21,9 @@ export function useIntersectionObserver(
 
       if (node) {
         observer.current = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting) {
-            savedCallback.current();
+          const entry = entries[0];
+          if (entry) {
+            savedCallback.current(entry);
           }
         }, options);
         observer.current.observe(node);

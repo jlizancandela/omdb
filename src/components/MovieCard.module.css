@@ -1,74 +1,15 @@
-.Pelicula {
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  background-color: var(--card-bg);
-  padding: 10px;
-  gap: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.Pelicula:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.Pelicula > img {
-  border-radius: 8px;
-  object-fit: cover;
-  cursor: pointer;
-  width: 200px;
-  height: 300px;
-}
-
-.Pelicula > section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  justify-content: space-between;
-  width: 100%;
-  margin: 0;
-}
-
-.Pelicula > section > h2 {
-  font-size: 1.5rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3; /* Número de líneas que quieres mostrar */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.favoriteButton {
-  font-size: 1.5rem;
-  cursor: pointer;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  transition: transform 0.2s ease;
-  align-self: flex-start;
-}
-
-.favoriteButton:hover {
-  transform: scale(1.1);
-}
-
-.favoriteButton:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.fav {
-  color: #ef4444;
-}
-
-.notFav {
-  color: #6b7280;
-}
+.movieCard { display: flex; min-width: 0; overflow: hidden; gap: 0.875rem; padding: 0.625rem; border: 1px solid var(--border-color); border-radius: 12px; background: var(--card-bg); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.movieCard:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); }
+.posterLink { flex: 0 0 126px; height: 190px; }
+.posterLink img { display: block; width: 100%; height: 100%; border-radius: 8px; object-fit: cover; }
+.cardContent { display: flex; flex: 1; min-width: 0; flex-direction: column; justify-content: space-between; padding: 0.25rem 0.125rem 0.125rem 0; }
+.titleLink { color: inherit; text-decoration: none; }
+.titleLink:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.cardContent h2 { display: -webkit-box; overflow: hidden; font-size: 1.1rem; line-height: 1.25; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; }
+.year { margin-top: 0.4rem; color: var(--muted-color); font-size: 0.9rem; }
+.favoriteButton { display: grid; align-self: flex-start; width: 2.5rem; height: 2.5rem; place-items: center; border: none; border-radius: 50%; background: transparent; cursor: pointer; transition: transform 0.2s ease, background-color 0.2s ease; }
+.favoriteButton svg { width: 1.35rem; height: 1.35rem; }
+.favoriteButton:hover { transform: translateY(-2px); background: #fef2f2; }
+.fav { color: var(--favorite-color); }
+.notFav { color: var(--muted-color); }
+@media (max-width: 640px) { .posterLink { flex-basis: 96px; height: 144px; } }

@@ -6,6 +6,7 @@ import * as debounce from "./useDebouncedValue";
 import * as intersection from "./useIntersectionObserver";
 import * as omdb from "../services/omdb";
 import type { OmdbSearchResult } from "../models/omdb";
+import type { OmdbServiceError } from "../services/omdb";
 import type { ReactNode } from "react";
 
 vi.mock("./useDebouncedValue");
@@ -30,7 +31,7 @@ describe("useMovies", () => {
     </Context.Provider>
   );
 
-  let intersectionCallback: () => void = () => {};
+  let intersectionCallback: (entry: IntersectionObserverEntry) => void = () => {};
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -76,7 +77,7 @@ describe("useMovies", () => {
       expect(result.current.data).toEqual(movieData);
     });
 
-    expect(getMovies).toHaveBeenCalledWith("Batman", 1);
+    expect(getMovies).toHaveBeenCalledWith("Batman", 1, expect.any(AbortSignal));
     expect(setLastpage).toHaveBeenCalledWith("Batman");
   });
 
@@ -124,7 +125,7 @@ describe("useMovies", () => {
     });
 
     act(() => {
-      intersectionCallback();
+      intersectionCallback({ isIntersecting: true } as IntersectionObserverEntry);
     });
 
     await waitFor(() => {
@@ -134,6 +135,139 @@ describe("useMovies", () => {
 
     expect(result.current.data?.Search[0]).toEqual(page1.Search[0]);
     expect(result.current.data?.Search[1]).toEqual(page2.Search[0]);
+  });
+
+  test("should only advance once while the sentinel stays intersecting", async () => {
+    hasMore.mockReturnValue(true);
+
+    const page1: OmdbSearchResult = {
+      Search: [
+        {
+          Title: "First",
+          Year: "2023",
+          imdbID: "tt1",
+          Type: "movie",
+          Poster: "url1",
+        },
+      ],
+      totalResults: "2",
+      Response: "True",
+    };
+
+    const page2: OmdbSearchResult = {
+      Search: [
+        {
+          Title: "Second",
+          Year: "2024",
+          imdbID: "tt2",
+          Type: "movie",
+          Poster: "url2",
+        },
+      ],
+      totalResults: "2",
+      Response: "True",
+    };
+
+    getMovies.mockResolvedValueOnce(page1).mockResolvedValueOnce(page2);
+
+    const { result } = renderHook(() => useMovies(), { wrapper });
+
+    act(() => {
+      result.current.setSearch("Spiderman");
+    });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(page1);
+    });
+
+    act(() => {
+      intersectionCallback({ isIntersecting: true } as IntersectionObserverEntry);
+      intersectionCallback({ isIntersecting: true } as IntersectionObserverEntry);
+    });
+
+    await waitFor(() => {
+      expect(getMovies).toHaveBeenCalledTimes(2);
+      expect(result.current.data?.Search).toHaveLength(2);
+    });
+  });
+
+  test("should allow another page load after the sentinel leaves and re-enters", async () => {
+    hasMore.mockReturnValue(true);
+
+    const page1: OmdbSearchResult = {
+      Search: [
+        {
+          Title: "First",
+          Year: "2023",
+          imdbID: "tt1",
+          Type: "movie",
+          Poster: "url1",
+        },
+      ],
+      totalResults: "3",
+      Response: "True",
+    };
+
+    const page2: OmdbSearchResult = {
+      Search: [
+        {
+          Title: "Second",
+          Year: "2024",
+          imdbID: "tt2",
+          Type: "movie",
+          Poster: "url2",
+        },
+      ],
+      totalResults: "3",
+      Response: "True",
+    };
+
+    const page3: OmdbSearchResult = {
+      Search: [
+        {
+          Title: "Third",
+          Year: "2025",
+          imdbID: "tt3",
+          Type: "movie",
+          Poster: "url3",
+        },
+      ],
+      totalResults: "3",
+      Response: "True",
+    };
+
+    getMovies
+      .mockResolvedValueOnce(page1)
+      .mockResolvedValueOnce(page2)
+      .mockResolvedValueOnce(page3);
+
+    const { result } = renderHook(() => useMovies(), { wrapper });
+
+    act(() => {
+      result.current.setSearch("Spiderman");
+    });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(page1);
+    });
+
+    act(() => {
+      intersectionCallback({ isIntersecting: true } as IntersectionObserverEntry);
+    });
+
+    await waitFor(() => {
+      expect(result.current.data?.Search).toHaveLength(2);
+    });
+
+    act(() => {
+      intersectionCallback({ isIntersecting: false } as IntersectionObserverEntry);
+      intersectionCallback({ isIntersecting: true } as IntersectionObserverEntry);
+    });
+
+    await waitFor(() => {
+      expect(result.current.data?.Search).toHaveLength(3);
+      expect(getMovies).toHaveBeenCalledTimes(3);
+    });
   });
 
   test("should clear movies when search is cleared", async () => {
@@ -171,6 +305,7 @@ describe("useMovies", () => {
     });
     expect(setLastpage).toHaveBeenCalledWith("");
     expect(window.location.pathname).toBe("/");
+    expect(sessionStorage.getItem("omdb-search-state")).toBeNull();
   });
 
   test("should reset movies when navigating to home", async () => {
@@ -204,5 +339,78 @@ describe("useMovies", () => {
       expect(result.current.data).toBeNull();
     });
     expect(setLastpage).toHaveBeenCalledWith("");
+  });
+
+  test("should expose initial errors and retry them", async () => {
+    const error = {
+      kind: "http",
+      message: "Service unavailable.",
+      retryable: true,
+    } as OmdbServiceError;
+    getMovies.mockRejectedValueOnce(error).mockResolvedValueOnce({
+      Search: [],
+      totalResults: "0",
+      Response: "True",
+    });
+
+    const { result } = renderHook(() => useMovies(), { wrapper });
+    act(() => result.current.setSearch("Batman"));
+
+    await waitFor(() => expect(result.current.error).toBe(error));
+    expect(result.current.data).toBeNull();
+
+    act(() => result.current.retry());
+    await waitFor(() => expect(result.current.error).toBeNull());
+    expect(getMovies).toHaveBeenCalledTimes(2);
+  });
+
+  test("keeps existing results when pagination fails and retries the page", async () => {
+    hasMore.mockReturnValue(true);
+    const page1: OmdbSearchResult = {
+      Search: [{ Title: "First", Year: "2023", imdbID: "tt1", Type: "movie", Poster: "url1" }],
+      totalResults: "2",
+      Response: "True",
+    };
+    const page2: OmdbSearchResult = {
+      Search: [{ Title: "Second", Year: "2024", imdbID: "tt2", Type: "movie", Poster: "url2" }],
+      totalResults: "2",
+      Response: "True",
+    };
+    getMovies.mockResolvedValueOnce(page1).mockRejectedValueOnce({
+      kind: "network",
+      message: "offline",
+      retryable: true,
+    } as OmdbServiceError).mockResolvedValueOnce(page2);
+
+    const { result } = renderHook(() => useMovies(), { wrapper });
+    act(() => result.current.setSearch("Batman"));
+    await waitFor(() => expect(result.current.data).toEqual(page1));
+
+    act(() => intersectionCallback({ isIntersecting: true } as IntersectionObserverEntry));
+    await waitFor(() => expect(result.current.paginationError).not.toBeNull());
+    expect(result.current.data?.Search).toEqual(page1.Search);
+
+    act(() => result.current.retry());
+    await waitFor(() => expect(result.current.data?.Search).toHaveLength(2));
+    expect(result.current.paginationError).toBeNull();
+  });
+
+  test("ignores a stale search response", async () => {
+    let resolveFirst: (data: OmdbSearchResult) => void = () => {};
+    const first = new Promise<OmdbSearchResult>((resolve) => { resolveFirst = resolve; });
+    const second: OmdbSearchResult = {
+      Search: [{ Title: "Second", Year: "2024", imdbID: "tt2", Type: "movie", Poster: "url2" }],
+      totalResults: "1",
+      Response: "True",
+    };
+    getMovies.mockReturnValueOnce(first).mockResolvedValueOnce(second);
+
+    const { result } = renderHook(() => useMovies(), { wrapper });
+    act(() => result.current.setSearch("First"));
+    act(() => result.current.setSearch("Second"));
+    await waitFor(() => expect(result.current.data).toEqual(second));
+    act(() => resolveFirst({ Search: [], totalResults: "0", Response: "True" }));
+
+    expect(result.current.data).toEqual(second);
   });
 });
