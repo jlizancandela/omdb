@@ -38,9 +38,10 @@ describe("useIntersectionObserver", () => {
     mockIntersectionObserver(mockEntry);
 
     expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(mockEntry[0]);
   });
 
-  test("should not call callback when element is not intersecting", () => {
+  test("should forward non-intersecting entries to the callback", () => {
     const callback = vi.fn();
     const { result } = renderHook(() => useIntersectionObserver(callback));
 
@@ -50,7 +51,8 @@ describe("useIntersectionObserver", () => {
     const mockEntry = [{ isIntersecting: false }];
     mockIntersectionObserver(mockEntry);
 
-    expect(callback).not.toHaveBeenCalled();
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(mockEntry[0]);
   });
 
   test("should disconnect observer when node is unmounted", () => {

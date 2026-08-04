@@ -66,7 +66,7 @@ describe("Router", () => {
   test("should render Router component", () => {
     window.history.pushState({}, "", "/");
     const { getByText } = render(<Router />, { wrapper });
-    expect(getByText("Proyecto OMDB")).toBeInTheDocument();
+    expect(getByText("OMDb Movie Browser")).toBeInTheDocument();
   });
 
   test("should render Movie component", () => {

@@ -1,57 +1,45 @@
-import { type OmdbMovieShort as Movie } from "../models/omdb";
-import styles from "./MovieCard.module.css";
-import { useNavigate } from "react-router";
-import { useFavorites } from "../hooks/useFavorites";
-import image from "../assets/placeHolder.png";
 import { forwardRef, type Ref } from "react";
+import { Link } from "react-router";
+import { useFavorites } from "../hooks/useFavorites";
+import type { OmdbMovieShort as Movie } from "../models/omdb";
+import image from "../assets/placeHolder.png";
+import styles from "./MovieCard.module.css";
 
-interface Props {
-  movie: Movie;
-}
+interface Props { movie: Movie; }
 
-export const MovieCard = forwardRef<HTMLDivElement, Props>(
-  ({ movie }, ref: Ref<HTMLDivElement>) => {
+export const MovieCard = forwardRef<HTMLElement, Props>(
+  ({ movie }, ref: Ref<HTMLElement>) => {
     const { isFav, toggleFav } = useFavorites();
-    const navigate = useNavigate();
-    const handleMovieClick = (id: string) => {
-      navigate(`/movie/${id}`);
-    };
+    const favorite = isFav(movie.imdbID);
 
     return (
-      <article
-        className={`${styles.Pelicula}`}
-        ref={ref}
-        data-aos="fade-up"
-        data-aos-duration="1000"
-        data-aos-easing="ease-in-out"
-      >
-        <img
-          src={movie.Poster === "N/A" ? image : movie.Poster}
-          alt={movie.Title}
-          onError={(e) => {
-            e.currentTarget.src = image;
-          }}
-          onClick={() => {
-            handleMovieClick(movie.imdbID);
-          }}
-        />
-        <section>
-          <h2>{movie.Title}</h2>
-          <p>{movie.Year}</p>
+      <article className={styles.movieCard} ref={ref}>
+        <Link className={styles.posterLink} to={`/movie/${movie.imdbID}`}>
+          <img
+            src={movie.Poster === "N/A" ? image : movie.Poster}
+            alt={`Poster for ${movie.Title}`}
+            onError={(event) => { event.currentTarget.src = image; }}
+          />
+        </Link>
+        <div className={styles.cardContent}>
+          <div>
+            <Link className={styles.titleLink} to={`/movie/${movie.imdbID}`}>
+              <h2>{movie.Title}</h2>
+            </Link>
+            <p className={styles.year}>{movie.Year}</p>
+          </div>
           <button
-            className={`${styles.favoriteButton} ${
-              isFav(movie.imdbID) ? styles.fav : styles.notFav
-            }`}
+            className={`${styles.favoriteButton} ${favorite ? styles.fav : styles.notFav}`}
             onClick={() => toggleFav(movie)}
-            aria-label={
-              isFav(movie.imdbID)
-                ? "Remove from favorites"
-                : "Add to favorites"
-            }
+            type="button"
+            aria-pressed={favorite}
+            aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
           >
-            {isFav(movie.imdbID) ? "♥" : "♡"}
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill={favorite ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+              <path d="M20.8 8.7c0 5.3-8.8 10.1-8.8 10.1S3.2 14 3.2 8.7A4.7 4.7 0 0 1 12 6.3a4.7 4.7 0 0 1 8.8 2.4Z" />
+            </svg>
           </button>
-        </section>
+        </div>
       </article>
     );
   }

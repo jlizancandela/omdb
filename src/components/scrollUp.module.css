@@ -5,8 +5,8 @@
   background-color: #000;
   color: #fff;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 44px;
+  height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +25,7 @@
 }
 
 .scroll-up svg {
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
   stroke: #fff;
 }

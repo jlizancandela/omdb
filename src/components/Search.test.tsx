@@ -22,4 +22,15 @@ describe("Search", () => {
 
     expect(setSearch).toHaveBeenCalledWith("test");
   });
+
+  test("shows an accessible clear action only when the input has a value", () => {
+    const { queryByRole, getByRole } = render(
+      <Search setSearch={setSearch} value="spider" />
+    );
+
+    fireEvent.click(getByRole("button", { name: "Clear search" }));
+
+    expect(setSearch).toHaveBeenCalledWith("");
+    expect(queryByRole("button", { name: "Clear search" })).toBeInTheDocument();
+  });
 });

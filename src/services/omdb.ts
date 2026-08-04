@@ -5,26 +5,151 @@ import type {
 } from "../models/omdb";
 
 export const api = "https://www.omdbapi.com/";
+const apiKey = import.meta.env.VITE_API_KEY || window.API_KEY;
+
+export type OmdbErrorKind =
+  | "http"
+  | "api"
+  | "network"
+  | "invalid-payload"
+  | "cancelled";
+
+export class OmdbServiceError extends Error {
+  readonly kind: OmdbErrorKind;
+  readonly status?: number;
+  readonly retryable: boolean;
+
+  constructor(
+    kind: OmdbErrorKind,
+    message: string,
+    options: { status?: number; retryable?: boolean } = {}
+  ) {
+    super(message);
+    this.name = "OmdbServiceError";
+    this.kind = kind;
+    this.status = options.status;
+    this.retryable = options.retryable ?? kind !== "api";
+  }
+}
+
+export const isOmdbServiceError = (error: unknown): error is OmdbServiceError =>
+  error instanceof OmdbServiceError;
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const isMovie = (value: unknown): boolean => {
+  if (!isRecord(value)) return false;
+  return (
+    typeof value.Title === "string" &&
+    typeof value.Year === "string" &&
+    typeof value.imdbID === "string" &&
+    typeof value.Type === "string" &&
+    typeof value.Poster === "string"
+  );
+};
+
+const parsePayload = async (response: Response): Promise<unknown> => {
+  try {
+    return await response.json();
+  } catch {
+    throw new OmdbServiceError(
+      "invalid-payload",
+      "OMDb returned invalid JSON.",
+      { retryable: true }
+    );
+  }
+};
+
+const request = async (url: string, signal?: AbortSignal): Promise<unknown> => {
+  if (signal?.aborted) {
+    throw new OmdbServiceError("cancelled", "Request was cancelled.", {
+      retryable: false,
+    });
+  }
+  let response: Response;
+  try {
+    response = await fetch(url, { signal });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new OmdbServiceError("cancelled", "Request was cancelled.", {
+        retryable: false,
+      });
+    }
+    throw new OmdbServiceError(
+      "network",
+      "Could not reach the OMDb service.",
+      { retryable: true }
+    );
+  }
+
+  if (!response.ok) {
+    throw new OmdbServiceError(
+      "http",
+      "The OMDb service returned an HTTP error.",
+      { status: response.status, retryable: response.status === 429 || response.status >= 500 }
+    );
+  }
+
+  return parsePayload(response);
+};
+
+const parseSearchResult = (payload: unknown): OmdbSearchResult => {
+  if (!isRecord(payload)) {
+    throw new OmdbServiceError("invalid-payload", "OMDb returned an unexpected response.");
+  }
+  if (payload.Response === "False") {
+    throw new OmdbServiceError(
+      "api",
+      typeof payload.Error === "string" ? payload.Error : "OMDb rejected the search."
+    );
+  }
+  if (
+    payload.Response !== "True" ||
+    typeof payload.totalResults !== "string" ||
+    !Array.isArray(payload.Search) ||
+    !payload.Search.every(isMovie)
+  ) {
+    throw new OmdbServiceError("invalid-payload", "OMDb returned an unexpected response.");
+  }
+  return payload as unknown as OmdbSearchResult;
+};
+
+const parseMovieDetails = (payload: unknown): OmdbMovieDetails => {
+  if (!isRecord(payload)) {
+    throw new OmdbServiceError("invalid-payload", "OMDb returned an unexpected response.");
+  }
+  if (payload.Response === "False") {
+    throw new OmdbServiceError(
+      "api",
+      typeof payload.Error === "string" ? payload.Error : "OMDb rejected the movie lookup."
+    );
+  }
+  if (
+    payload.Response !== "True" ||
+    typeof payload.Title !== "string" ||
+    typeof payload.imdbID !== "string" ||
+    typeof payload.Type !== "string"
+  ) {
+    throw new OmdbServiceError("invalid-payload", "OMDb returned an unexpected response.");
+  }
+  return payload as unknown as OmdbMovieDetails;
+};
 
 export const getMovies = (
   pelicula: string,
-  page: number
-): Promise<OmdbSearchResult | undefined> => {
-  return fetch(
-    `${api}?s=${pelicula}&type=movie&page=${page}&apikey=${window.API_KEY}`
-  )
-    .then((response) => response.json())
-    .then((data: OmdbSearchResult) => data)
-    .catch((error) => {
-      console.error("Error al obtener datos de OMDb:", error);
-      return undefined;
-    });
-};
+  page: number,
+  signal?: AbortSignal
+): Promise<OmdbSearchResult> =>
+  request(`${api}?s=${encodeURIComponent(pelicula)}&type=movie&page=${page}&apikey=${apiKey}`, signal).then(
+    parseSearchResult
+  );
 
 export const hasMore = (data: OmdbSearchResult | null) => {
-  if (!data) return false;
+  if (!data || !Array.isArray(data.Search)) return false;
 
-  return data?.Search?.length < parseInt(data?.totalResults || "0");
+  const totalResults = Number.parseInt(data.totalResults || "0", 10);
+  return Number.isFinite(totalResults) && data.Search.length < totalResults;
 };
 
 export const filtrarPeliculasUnicas = (
@@ -55,20 +180,26 @@ export const filtrarPeliculasUnicas = (
 };
 
 export const getMovieById = (
-  id: string
-): Promise<OmdbMovieDetails | undefined> => {
-  return fetch(`${api}?i=${id}&apikey=${window.API_KEY}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data: OmdbMovieDetails) => data)
-    .catch((error) => {
-      console.error("Error al obtener datos de OMDb:", error);
-      return undefined;
-    });
+  id: string,
+  signal?: AbortSignal
+): Promise<OmdbMovieDetails> =>
+  request(`${api}?i=${encodeURIComponent(id)}&apikey=${apiKey}`, signal).then(
+    parseMovieDetails
+  );
+
+export const getOmdbErrorMessage = (error: OmdbServiceError): string => {
+  switch (error.kind) {
+    case "api":
+      return error.message;
+    case "network":
+      return "We couldn't reach the movie service. Check your connection and try again.";
+    case "http":
+      return "The movie service is temporarily unavailable. Try again shortly.";
+    case "invalid-payload":
+      return "The movie service returned an unexpected response.";
+    case "cancelled":
+      return "";
+  }
 };
 
 export const toShortMovie = (movie: OmdbMovieDetails) => {

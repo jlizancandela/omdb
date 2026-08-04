@@ -1,6 +1,8 @@
 import { server } from "../mocks/server";
+import { http, HttpResponse } from "msw";
 import type { OmdbMovieShort } from "../models/omdb";
 import {
+  api,
   filtrarPeliculasUnicas,
   getMovieById,
   getMovies,
@@ -49,6 +51,31 @@ describe("OMDB API", () => {
     expect(data.imdbID).toBe("tt1234567");
     expect(data.Type).toBe("movie");
     expect(data.Poster).toBe("N/A");
+  });
+
+  test.each([
+    ["HTTP errors", HttpResponse.json({ error: "down" }, { status: 500 }), "http"],
+    ["OMDb errors", HttpResponse.json({ Response: "False", Error: "Movie not found!" }), "api"],
+    ["malformed payloads", HttpResponse.json({ Response: "True", Search: "nope" }), "invalid-payload"],
+  ])("should normalize %s", async (_, response, kind) => {
+    server.use(http.get(api, () => response));
+
+    await expect(getMovies("broken", 1)).rejects.toMatchObject({ kind });
+  });
+
+  test("should normalize network errors", async () => {
+    server.use(http.get(api, () => HttpResponse.error()));
+
+    await expect(getMovies("offline", 1)).rejects.toMatchObject({ kind: "network" });
+  });
+
+  test("should pass an abort signal and normalize cancellation", async () => {
+    const controller = new AbortController();
+    controller.abort();
+
+    await expect(getMovies("cancelled", 1, controller.signal)).rejects.toMatchObject({
+      kind: "cancelled",
+    });
   });
 
   test("should transform movie details", async () => {

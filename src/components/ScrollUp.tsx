@@ -22,6 +22,8 @@ export const ScrollUp = () => {
   return (
     <button
       className={`${styles["scroll-up"]} ${isVisible ? "" : styles.hidden}`}
+      type="button"
+      aria-label="Scroll to top"
       onClick={() => {
         window.scrollTo({
           top: 0,

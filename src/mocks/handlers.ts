@@ -1,8 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { api } from "../services/omdb";
 
-export const handlers = [
-  http.get(api, ({ request }) => {
+export const defaultOmdbHandler = http.get(api, ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get("s");
     const id = url.searchParams.get("i");
@@ -45,5 +44,6 @@ export const handlers = [
       { Response: "False", Error: "Missing query" },
       { status: 400 }
     );
-  }),
-];
+  });
+
+export const handlers = [defaultOmdbHandler];
