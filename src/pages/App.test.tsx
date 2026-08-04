@@ -65,9 +65,10 @@ describe("App", () => {
     useFavorites.mockClear(); // limpia los mocks antes de cada test
   });
 
-  test("should render App component", () => {
-    const { getByText } = render(<App />, { wrapper });
-    expect(getByText("OMDb Movie Browser")).toBeInTheDocument();
+  test("should render App component without the operation mode label", () => {
+    const { getByText, queryByText } = render(<App />, { wrapper });
+    expect(getByText("Explorador de películas OMDb")).toBeInTheDocument();
+    expect(queryByText("Modo de operación")).not.toBeInTheDocument();
   });
 
   test("should render Test Movie", () => {
@@ -88,7 +89,7 @@ describe("App", () => {
     const { getByText, getByRole } = render(<App />, { wrapper });
 
     expect(getByText("Test Movie")).toBeInTheDocument();
-    expect(getByRole("status", { name: "Loading more movies" })).toBeInTheDocument();
+    expect(getByRole("status", { name: "Cargando más películas" })).toBeInTheDocument();
   });
 
   test("hydrates the search input from the URL and clears it accessibly", () => {
@@ -97,9 +98,9 @@ describe("App", () => {
     const input = getByRole("textbox") as HTMLInputElement;
 
     expect(input.value).toBe("spider");
-    expect(getByRole("button", { name: "Clear search" })).toBeInTheDocument();
+    expect(getByRole("button", { name: "Limpiar búsqueda" })).toBeInTheDocument();
 
-    fireEvent.click(getByRole("button", { name: "Clear search" }));
+    fireEvent.click(getByRole("button", { name: "Limpiar búsqueda" }));
 
     expect(getByTestId("location")).toHaveTextContent("/");
   });

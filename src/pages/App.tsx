@@ -47,22 +47,21 @@ function App() {
     <div className={styles.page}>
       <header className={styles.header}>
         <div>
-          <h1>OMDb Movie Browser</h1>
-          <p>Search titles, inspect the details, and keep a short list for later.</p>
+          <h1>Explorador de películas OMDb</h1>
+          <p>Busca títulos, consulta los detalles y guarda una lista breve para después.</p>
         </div>
-        <span className={styles.mode}>Operate mode</span>
       </header>
       <Search setSearch={handleSearch} value={search} />
       <section className={styles.results} aria-live="polite" aria-busy={loading}>
         {error != null && (
           <div className={styles.message} role="alert">
             <p>{errorMessage}</p>
-            <button type="button" onClick={retry}>Try again</button>
+            <button type="button" onClick={retry}>Intentar de nuevo</button>
           </div>
         )}
         {initialLoading && (
           <div className={styles.loading} role="status">
-            <span className="srOnly">Loading movie results</span>
+            <span className="srOnly">Cargando resultados de películas</span>
             <div className={styles.loadingBar} />
             <div className={styles.loadingGrid}><span /><span /><span /></div>
           </div>
@@ -71,16 +70,16 @@ function App() {
         {paginationError && data && (
           <div className={styles.message} role="alert">
             <p>{paginationErrorMessage}</p>
-            <button type="button" onClick={retry}>Try again</button>
+            <button type="button" onClick={retry}>Intentar de nuevo</button>
           </div>
         )}
         {loadingMore && (
-          <div className={styles.loadingMore} role="status" aria-label="Loading more movies">
+          <div className={styles.loadingMore} role="status" aria-label="Cargando más películas">
             <span className={styles.loadingMoreIndicator} aria-hidden="true" />
-            <span>Loading more movies</span>
+            <span>Cargando más películas</span>
           </div>
         )}
-        {!initialLoading && !loadingMore && !error && !data && <p className={styles.message}>Start with a title to browse movies.</p>}
+        {!initialLoading && !loadingMore && !error && !data && <p className={styles.message}>Comienza con un título para explorar películas.</p>}
       </section>
     </div>
   );

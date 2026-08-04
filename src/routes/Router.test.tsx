@@ -66,7 +66,7 @@ describe("Router", () => {
   test("should render Router component", () => {
     window.history.pushState({}, "", "/");
     const { getByText } = render(<Router />, { wrapper });
-    expect(getByText("OMDb Movie Browser")).toBeInTheDocument();
+    expect(getByText("Explorador de películas OMDb")).toBeInTheDocument();
   });
 
   test("should render Movie component", () => {
@@ -78,6 +78,6 @@ describe("Router", () => {
   test("should render Favorites component", () => {
     window.history.pushState({}, "", "/favorites");
     const { getByRole } = render(<Router />, { wrapper });
-    expect(getByRole("heading", { name: "Favorites" })).toBeInTheDocument();
+    expect(getByRole("heading", { name: "Favoritos" })).toBeInTheDocument();
   });
 });

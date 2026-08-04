@@ -31,7 +31,7 @@ describe("Favorites", () => {
 
   test("should render Favorites component", () => {
     const { getByText } = render(<Favorites />, { wrapper });
-    expect(getByText("Favorites")).toBeInTheDocument();
+    expect(getByText("Favoritos")).toBeInTheDocument();
   });
 
   test("should render Movies component", () => {

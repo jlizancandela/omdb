@@ -157,7 +157,7 @@ export const useMovies = (movie = "") => {
         if (!active || (isOmdbServiceError(error) && error.kind === "cancelled")) return;
         const serviceError = isOmdbServiceError(error) || isServiceError(error)
           ? error as OmdbServiceError
-          : new OmdbServiceError("network", "Could not reach the OMDb service.");
+          : new OmdbServiceError("network", "No se pudo acceder al servicio de OMDb.");
         if (page === 1) setError(serviceError);
         else setPaginationError(serviceError);
       })

@@ -12,7 +12,7 @@ export function Search({ setSearch, value = "" }: Props) {
       onSubmit={(e) => e.preventDefault()}
     >
       <label htmlFor="movie-search" className="srOnly">
-        Search movies by title
+        Buscar películas por título
       </label>
       <span className={styles.searchIcon} aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -25,14 +25,14 @@ export function Search({ setSearch, value = "" }: Props) {
         type="text"
         value={value}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search movies by title..."
+        placeholder="Buscar películas por título..."
         autoComplete="off"
         />
       {value && (
         <button
           className={styles.clearButton}
           type="button"
-          aria-label="Clear search"
+          aria-label="Limpiar búsqueda"
           onClick={() => setSearch("")}
         >
           ×

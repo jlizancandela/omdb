@@ -19,12 +19,12 @@ const renderWithWrapper = (entries: string[], lastPage = "") => {
 describe("Navbar", () => {
   test("should render home and favorites", () => {
     const { getByText } = renderWithWrapper(["/"]);
-    expect(getByText("Home")).toBeInTheDocument();
-    expect(getByText("Favorites")).toBeInTheDocument();
+    expect(getByText("Inicio")).toBeInTheDocument();
+    expect(getByText("Favoritos")).toBeInTheDocument();
   });
 
   test("should render back button", () => {
     const { getByText } = renderWithWrapper(["/movie/123"], "search");
-    expect(getByText("Back")).toBeInTheDocument();
+    expect(getByText("Volver")).toBeInTheDocument();
   });
 });

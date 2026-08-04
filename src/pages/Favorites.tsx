@@ -8,10 +8,10 @@ export const Favorites = () => {
   return (
     <div className={styles.page}>
       <header>
-        <h1>Favorites</h1>
-        <p>Titles you chose to keep close.</p>
+        <h1>Favoritos</h1>
+        <p>Títulos que elegiste conservar.</p>
       </header>
-      <Movies movies={fav} emptyMessage="Your favorites list is empty. Save a movie to see it here." />
+      <Movies movies={fav} emptyMessage="Tu lista de favoritos está vacía. Guarda una película para verla aquí." />
     </div>
   );
 };

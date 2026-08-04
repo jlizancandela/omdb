@@ -11,14 +11,14 @@ interface Props {
 export function Movies({
   movies,
   sentinelRef,
-  emptyMessage = "No movies found for that search.",
+  emptyMessage = "No se encontraron películas para esa búsqueda.",
 }: Props) {
   if (movies.length === 0) {
     return <p className={styles.empty} role="status">{emptyMessage}</p>;
   }
 
   return (
-    <section className={styles.movies} aria-label="Movie results">
+    <section className={styles.movies} aria-label="Resultados de películas">
       {movies.map((movie) => (
         <MovieCard
           movie={movie}

@@ -8,20 +8,20 @@ import image from "../assets/placeHolder.png";
 
 const getMovieErrorMessage = (error: OmdbServiceError): string => {
   if (error.kind === "api" && /not found/i.test(error.message)) {
-    return "We couldn't find a movie with that IMDb ID.";
+    return "No se encontró una película con ese ID de IMDb.";
   }
 
   switch (error.kind) {
     case "api":
-      return "OMDb couldn't load this movie. Check the IMDb ID and try again.";
+      return "OMDb no pudo cargar esta película. Comprueba el ID de IMDb e inténtalo de nuevo.";
     case "http":
-      return "The movie service is temporarily unavailable. Try again shortly.";
+      return "El servicio de películas no está disponible temporalmente. Inténtalo de nuevo en unos instantes.";
     case "network":
-      return "We couldn't connect to the movie service. Check your connection and try again.";
+      return "No se pudo conectar con el servicio de películas. Comprueba tu conexión e inténtalo de nuevo.";
     case "invalid-payload":
-      return "The movie service returned incomplete details. Try again shortly.";
+      return "El servicio de películas devolvió detalles incompletos. Inténtalo de nuevo en unos instantes.";
     case "cancelled":
-      return "The movie request was cancelled. Try again to load the details.";
+      return "La solicitud de la película se canceló. Inténtalo de nuevo para cargar los detalles.";
   }
 };
 
@@ -34,14 +34,14 @@ export const Movie = () => {
   }
 
   if (loading) {
-    return <p className={styles.message} role="status">Loading movie details...</p>;
+    return <p className={styles.message} role="status">Cargando detalles de la película...</p>;
   }
 
   if (error) {
     return (
       <div className={styles.message} role="alert">
         <p>{getMovieErrorMessage(error)}</p>
-        <button type="button" onClick={retry}>Try again</button>
+        <button type="button" onClick={retry}>Intentar de nuevo</button>
       </div>
     );
   }
@@ -51,7 +51,7 @@ export const Movie = () => {
       <div className={styles.movieContainer}>
         <img
           src={data?.Poster == "N/A" ? image : data?.Poster}
-          alt={`Poster for ${data.Title}`}
+          alt={`Cartel de ${data.Title}`}
           onError={(e) => {
             e.currentTarget.src = image;
           }}
@@ -67,7 +67,7 @@ export const Movie = () => {
               onClick={() => toggleFav(toShortMovie(data))}
               type="button"
               aria-pressed={isFav(id || "")}
-              aria-label={isFav(id || "") ? "Remove from favorites" : "Add to favorites"}
+              aria-label={isFav(id || "") ? "Quitar de favoritos" : "Añadir a favoritos"}
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" fill={isFav(id || "") ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
                 <path d="M20.8 8.7c0 5.3-8.8 10.1-8.8 10.1S3.2 14 3.2 8.7A4.7 4.7 0 0 1 12 6.3a4.7 4.7 0 0 1 8.8 2.4Z" />
@@ -77,14 +77,14 @@ export const Movie = () => {
           <p className={styles.plot}>{data.Plot}</p>
           <dl className={styles.facts}>
             <div><dt>Director</dt><dd>{data.Director}</dd></div>
-            <div><dt>Actors</dt><dd>{data.Actors}</dd></div>
-            <div><dt>Genre</dt><dd>{data.Genre}</dd></div>
-            <div><dt>Runtime</dt><dd>{data.Runtime}</dd></div>
-            <div><dt>IMDb rating</dt><dd>{data.imdbRating}</dd></div>
+            <div><dt>Actores</dt><dd>{data.Actors}</dd></div>
+            <div><dt>Género</dt><dd>{data.Genre}</dd></div>
+            <div><dt>Duración</dt><dd>{data.Runtime}</dd></div>
+            <div><dt>Calificación de IMDb</dt><dd>{data.imdbRating}</dd></div>
           </dl>
         </div>
       </div>
     );
 
-  return <p className={styles.message} role="status">This movie is not available.</p>;
+  return <p className={styles.message} role="status">Esta película no está disponible.</p>;
 };

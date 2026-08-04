@@ -10,7 +10,7 @@ export const NavBar = () => {
   const { lastPage, setLastpage } = ctx;
 
   return (
-    <nav className={styles.nav} aria-label="Primary navigation">
+    <nav className={styles.nav} aria-label="Navegación principal">
       <div className={styles.navInner}>
         <Link className={styles.brand} to="/" onClick={() => setLastpage("")}>
           <span className={styles.brandMark} aria-hidden="true">O</span>
@@ -19,8 +19,8 @@ export const NavBar = () => {
         <ul>
         {lastPage !== "" && location.pathname.includes("/movie/") && (
           <li>
-            <Link to={`/search/${lastPage}`} aria-label="Back to search results">
-              <span aria-hidden="true">←</span> Back
+            <Link to={`/search/${lastPage}`} aria-label="Volver a los resultados de búsqueda">
+              <span aria-hidden="true">←</span> Volver
             </Link>
           </li>
         )}
@@ -31,7 +31,7 @@ export const NavBar = () => {
             className={location.pathname === "/" ? styles.active : undefined}
             aria-current={location.pathname === "/" ? "page" : undefined}
           >
-            Home
+            Inicio
           </Link>
         </li>
         <li>
@@ -39,7 +39,7 @@ export const NavBar = () => {
             to="/favorites"
             className={location.pathname === "/favorites" ? styles.active : undefined}
             aria-current={location.pathname === "/favorites" ? "page" : undefined}
-          >Favorites</Link>
+          >Favoritos</Link>
         </li>
         </ul>
       </div>

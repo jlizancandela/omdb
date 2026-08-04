@@ -17,7 +17,7 @@ export const MovieCard = forwardRef<HTMLElement, Props>(
         <Link className={styles.posterLink} to={`/movie/${movie.imdbID}`}>
           <img
             src={movie.Poster === "N/A" ? image : movie.Poster}
-            alt={`Poster for ${movie.Title}`}
+            alt={`Cartel de ${movie.Title}`}
             onError={(event) => { event.currentTarget.src = image; }}
           />
         </Link>
@@ -33,7 +33,7 @@ export const MovieCard = forwardRef<HTMLElement, Props>(
             onClick={() => toggleFav(movie)}
             type="button"
             aria-pressed={favorite}
-            aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+            aria-label={favorite ? "Quitar de favoritos" : "Añadir a favoritos"}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true" fill={favorite ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
               <path d="M20.8 8.7c0 5.3-8.8 10.1-8.8 10.1S3.2 14 3.2 8.7A4.7 4.7 0 0 1 12 6.3a4.7 4.7 0 0 1 8.8 2.4Z" />

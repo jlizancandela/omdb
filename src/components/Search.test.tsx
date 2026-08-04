@@ -28,9 +28,9 @@ describe("Search", () => {
       <Search setSearch={setSearch} value="spider" />
     );
 
-    fireEvent.click(getByRole("button", { name: "Clear search" }));
+    fireEvent.click(getByRole("button", { name: "Limpiar búsqueda" }));
 
     expect(setSearch).toHaveBeenCalledWith("");
-    expect(queryByRole("button", { name: "Clear search" })).toBeInTheDocument();
+    expect(queryByRole("button", { name: "Limpiar búsqueda" })).toBeInTheDocument();
   });
 });

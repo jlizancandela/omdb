@@ -50,27 +50,27 @@ describe("Movie", () => {
     [
       "not found",
       { kind: "api", message: "Movie not found!" },
-      "We couldn't find a movie with that IMDb ID.",
+      "No se encontró una película con ese ID de IMDb.",
     ],
     [
       "API errors",
       { kind: "api", message: "Invalid IMDb ID" },
-      "OMDb couldn't load this movie. Check the IMDb ID and try again.",
+      "OMDb no pudo cargar esta película. Comprueba el ID de IMDb e inténtalo de nuevo.",
     ],
     [
       "service errors",
       { kind: "http", message: "The service is unavailable" },
-      "The movie service is temporarily unavailable. Try again shortly.",
+      "El servicio de películas no está disponible temporalmente. Inténtalo de nuevo en unos instantes.",
     ],
     [
       "network errors",
       { kind: "network", message: "Could not reach the service" },
-      "We couldn't connect to the movie service. Check your connection and try again.",
+      "No se pudo conectar con el servicio de películas. Comprueba tu conexión e inténtalo de nuevo.",
     ],
     [
       "cancellation errors",
       { kind: "cancelled", message: "Request was cancelled" },
-      "The movie request was cancelled. Try again to load the details.",
+      "La solicitud de la película se canceló. Inténtalo de nuevo para cargar los detalles.",
     ],
   ])("should explain %s", (_, error, message) => {
     useMovieDetails.mockReturnValue({
@@ -82,6 +82,6 @@ describe("Movie", () => {
     const { getByRole } = render(<Movie />, { wrapper });
 
     expect(getByRole("alert")).toHaveTextContent(message);
-    expect(getByRole("button", { name: "Try again" })).toBeInTheDocument();
+    expect(getByRole("button", { name: "Intentar de nuevo" })).toBeInTheDocument();
   });
 });

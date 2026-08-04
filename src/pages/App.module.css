@@ -2,7 +2,6 @@
 .header { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; }
 .header h1 { font-size: 2rem; line-height: 1.15; letter-spacing: -0.03em; }
 .header p { max-width: 56ch; margin-top: 0.6rem; color: var(--muted-color); }
-.mode { flex: 0 0 auto; padding: 0.45rem 0.75rem; border: 1px solid #dbe3ef; border-radius: 9999px; background: #eff6ff; color: #345173; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
 .results { margin-top: 2.5rem; }
 .message { padding: 2rem; border: 1px solid var(--border-color); border-radius: 12px; background: var(--card-bg); color: var(--muted-color); text-align: center; }
 .loadingBar { width: 180px; height: 1.25rem; margin-bottom: 1.25rem; border-radius: 6px; background: #e5e7eb; animation: pulse 1.2s ease-in-out infinite; }

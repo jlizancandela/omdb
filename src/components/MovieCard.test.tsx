@@ -31,7 +31,7 @@ describe("MovieCard", () => {
     expect(result.getByText("Test Movie")).toBeInTheDocument();
     expect(result.getByText("2022")).toBeInTheDocument();
     expect(
-      result.getByRole("button", { name: "Add to favorites" })
+      result.getByRole("button", { name: "Añadir a favoritos" })
     ).toBeInTheDocument();
   });
 });

@@ -55,7 +55,7 @@ const parsePayload = async (response: Response): Promise<unknown> => {
   } catch {
     throw new OmdbServiceError(
       "invalid-payload",
-      "OMDb returned invalid JSON.",
+      "OMDb devolvió JSON no válido.",
       { retryable: true }
     );
   }
@@ -63,7 +63,7 @@ const parsePayload = async (response: Response): Promise<unknown> => {
 
 const request = async (url: string, signal?: AbortSignal): Promise<unknown> => {
   if (signal?.aborted) {
-    throw new OmdbServiceError("cancelled", "Request was cancelled.", {
+    throw new OmdbServiceError("cancelled", "La solicitud se canceló.", {
       retryable: false,
     });
   }
@@ -72,13 +72,13 @@ const request = async (url: string, signal?: AbortSignal): Promise<unknown> => {
     response = await fetch(url, { signal });
   } catch (error) {
     if (error instanceof DOMException && error.name === "AbortError") {
-      throw new OmdbServiceError("cancelled", "Request was cancelled.", {
+      throw new OmdbServiceError("cancelled", "La solicitud se canceló.", {
         retryable: false,
       });
     }
     throw new OmdbServiceError(
       "network",
-      "Could not reach the OMDb service.",
+      "No se pudo acceder al servicio de OMDb.",
       { retryable: true }
     );
   }
@@ -86,7 +86,7 @@ const request = async (url: string, signal?: AbortSignal): Promise<unknown> => {
   if (!response.ok) {
     throw new OmdbServiceError(
       "http",
-      "The OMDb service returned an HTTP error.",
+      "El servicio de OMDb devolvió un error HTTP.",
       { status: response.status, retryable: response.status === 429 || response.status >= 500 }
     );
   }
@@ -96,12 +96,12 @@ const request = async (url: string, signal?: AbortSignal): Promise<unknown> => {
 
 const parseSearchResult = (payload: unknown): OmdbSearchResult => {
   if (!isRecord(payload)) {
-    throw new OmdbServiceError("invalid-payload", "OMDb returned an unexpected response.");
+    throw new OmdbServiceError("invalid-payload", "OMDb devolvió una respuesta inesperada.");
   }
   if (payload.Response === "False") {
     throw new OmdbServiceError(
       "api",
-      typeof payload.Error === "string" ? payload.Error : "OMDb rejected the search."
+      typeof payload.Error === "string" ? payload.Error : "OMDb rechazó la búsqueda."
     );
   }
   if (
@@ -110,14 +110,14 @@ const parseSearchResult = (payload: unknown): OmdbSearchResult => {
     !Array.isArray(payload.Search) ||
     !payload.Search.every(isMovie)
   ) {
-    throw new OmdbServiceError("invalid-payload", "OMDb returned an unexpected response.");
+    throw new OmdbServiceError("invalid-payload", "OMDb devolvió una respuesta inesperada.");
   }
   return payload as unknown as OmdbSearchResult;
 };
 
 const parseMovieDetails = (payload: unknown): OmdbMovieDetails => {
   if (!isRecord(payload)) {
-    throw new OmdbServiceError("invalid-payload", "OMDb returned an unexpected response.");
+    throw new OmdbServiceError("invalid-payload", "OMDb devolvió una respuesta inesperada.");
   }
   if (payload.Response === "False") {
     throw new OmdbServiceError(
@@ -131,7 +131,7 @@ const parseMovieDetails = (payload: unknown): OmdbMovieDetails => {
     typeof payload.imdbID !== "string" ||
     typeof payload.Type !== "string"
   ) {
-    throw new OmdbServiceError("invalid-payload", "OMDb returned an unexpected response.");
+    throw new OmdbServiceError("invalid-payload", "OMDb devolvió una respuesta inesperada.");
   }
   return payload as unknown as OmdbMovieDetails;
 };
@@ -190,13 +190,16 @@ export const getMovieById = (
 export const getOmdbErrorMessage = (error: OmdbServiceError): string => {
   switch (error.kind) {
     case "api":
+      if (/not found/i.test(error.message)) return "No se encontró la película.";
+      if (/too many results/i.test(error.message)) return "La búsqueda devuelve demasiados resultados.";
+      if (/incorrect imdb id/i.test(error.message)) return "El ID de IMDb no es correcto.";
       return error.message;
     case "network":
-      return "We couldn't reach the movie service. Check your connection and try again.";
+      return "No se pudo acceder al servicio de películas. Comprueba tu conexión e inténtalo de nuevo.";
     case "http":
-      return "The movie service is temporarily unavailable. Try again shortly.";
+      return "El servicio de películas no está disponible temporalmente. Inténtalo de nuevo en unos instantes.";
     case "invalid-payload":
-      return "The movie service returned an unexpected response.";
+      return "El servicio de películas devolvió una respuesta inesperada.";
     case "cancelled":
       return "";
   }

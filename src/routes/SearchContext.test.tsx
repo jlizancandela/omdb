@@ -78,7 +78,7 @@ describe("search context restoration", () => {
       writeSearchState("spider", 2, { "spider-1": result, "spider-2": result }, result);
 
       const { getByRole, getByText } = render(<Router />, { wrapper });
-      fireEvent.click(getByRole("link", { name: "Home" }));
+      fireEvent.click(getByRole("link", { name: "Inicio" }));
 
       expect(getByRole("textbox")).toHaveValue("spider");
       expect(getByText("Test Movie")).toBeInTheDocument();
@@ -90,7 +90,7 @@ describe("search context restoration", () => {
     window.history.pushState({}, "", "/");
 
     const { getByRole } = render(<Router />, { wrapper });
-    fireEvent.click(getByRole("button", { name: "Clear search" }));
+    fireEvent.click(getByRole("button", { name: "Limpiar búsqueda" }));
 
     expect(sessionStorage.getItem("omdb-search-state")).toBeNull();
     expect(window.location.pathname).toBe("/");
