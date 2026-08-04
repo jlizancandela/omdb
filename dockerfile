@@ -1,5 +1,5 @@
 # Etapa 1: Construcción de la app de React
-FROM node:18-alpine AS builder
+FROM node:24-alpine AS builder
 
 # Definimos el directorio de trabajo
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Habilitamos pnpm e instalamos dependencias
-RUN corepack enable && corepack prepare pnpm@11.9.0 --activate && pnpm install --frozen-lockfile
+RUN corepack enable && pnpm install --frozen-lockfile
 
 # Copiamos el resto del código
 COPY . .
