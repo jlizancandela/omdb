@@ -4,17 +4,17 @@ FROM node:18-alpine AS builder
 # Definimos el directorio de trabajo
 WORKDIR /app
 
-# Copiamos los archivos necesarios
-COPY package*.json ./
+# Copiamos los archivos necesarios para pnpm
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# Instalamos dependencias
-RUN npm ci
+# Habilitamos pnpm e instalamos dependencias
+RUN corepack enable && corepack prepare pnpm@11.9.0 --activate && pnpm install --frozen-lockfile
 
 # Copiamos el resto del código
 COPY . .
 
 # Compilamos la app
-RUN npm run build
+RUN pnpm run build
 
 
 # Etapa 2: Servir con Caddy
