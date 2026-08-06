@@ -1,5 +1,7 @@
 # OMDb Movie Browser
 
+[![ci](https://github.com/jlizancandela/omdb/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/jlizancandela/omdb/actions/workflows/docker-publish.yml) [![License](https://img.shields.io/github/license/jlizancandela/omdb)](https://github.com/jlizancandela/omdb/blob/main/LICENSE) [![Top language](https://img.shields.io/github/languages/top/jlizancandela/omdb)](https://github.com/jlizancandela/omdb) [![Last commit](https://img.shields.io/github/last-commit/jlizancandela/omdb)](https://github.com/jlizancandela/omdb/commits/main) [![Stars](https://img.shields.io/github/stars/jlizancandela/omdb?style=social)](https://github.com/jlizancandela/omdb/stargazers)
+
 Aplicación React + TypeScript para buscar películas en OMDb, ver detalles y guardar favoritos.
 
 ## Demo
